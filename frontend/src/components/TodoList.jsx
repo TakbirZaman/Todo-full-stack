@@ -3,9 +3,11 @@ import TodoItem from "./TodoItem";
 const TodoList = ({ todos, onDelete, onUpdate }) => {
   if (todos.length === 0) {
     return (
-      <p className="text-center text-stone-400 py-10">
-        No tasks yet. Add one above! 🎯
-      </p>
+      <div className="text-center py-14">
+        <p className="text-6xl mb-4">🎯</p>
+        <p className="text-xl text-gray-400 font-medium">No tasks here!</p>
+        <p className="text-base text-gray-300">Add one above to get started.</p>
+      </div>
     );
   }
 

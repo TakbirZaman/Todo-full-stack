@@ -5,70 +5,40 @@ import TodoList from "./components/TodoList";
 const API = "http://localhost:5000/api/todos";
 
 const App = () => {
-  const [todos, setTodos] = useState([]); // ✅ always starts as array
+  const [todos, setTodos] = useState([]);
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(""); // ✅ track errors
 
   useEffect(() => {
     fetch(API)
-      .then((res) => {
-        if (!res.ok) throw new Error(`Server error: ${res.status}`);
-        return res.json();
-      })
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setTodos(data); // ✅ only set if it's actually an array
-        } else {
-          setTodos([]);
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Fetch error:", err);
-        setError("Could not connect to server. Is your backend running?");
-        setTodos([]); 
-        setLoading(false);
-      });
+      .then((res) => res.json())
+      .then((data) => { setTodos(data); setLoading(false); })
+      .catch((err) => console.error(err));
   }, []);
 
   const handleAdd = async (title) => {
-    try {
-      const res = await fetch(API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title }),
-      });
-      const newTodo = await res.json();
-      if (newTodo && newTodo.id) {
-        setTodos((prev) => [newTodo, ...prev]);
-      }
-    } catch (err) {
-      console.error("Add error:", err);
-    }
+    const res = await fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title }),
+    });
+    const newTodo = await res.json();
+    setTodos([newTodo, ...todos]);
   };
 
   const handleDelete = async (id) => {
-    try {
-      await fetch(`${API}/${id}`, { method: "DELETE" });
-      setTodos((prev) => prev.filter((t) => t.id !== id));
-    } catch (err) {
-      console.error("Delete error:", err);
-    }
+    await fetch(`${API}/${id}`, { method: "DELETE" });
+    setTodos(todos.filter((t) => t.id !== id));
   };
 
   const handleUpdate = async (id, updatedData) => {
-    try {
-      const res = await fetch(`${API}/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(updatedData),
-      });
-      const updated = await res.json();
-      setTodos((prev) => prev.map((t) => (t.id === id ? updated : t)));
-    } catch (err) {
-      console.error("Update error:", err);
-    }
+    const res = await fetch(`${API}/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedData),
+    });
+    const updated = await res.json();
+    setTodos(todos.map((t) => (t.id === id ? updated : t)));
   };
 
   const filteredTodos = todos.filter((t) => {
@@ -79,48 +49,56 @@ const App = () => {
 
   const completedCount = todos.filter((t) => t.completed).length;
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 flex items-center justify-center px-4">
-      <div className="absolute top-10 left-10 w-72 h-72 bg-blue-500 opacity-10 rounded-full blur-3xl"></div>
-      <div className="absolute bottom-10 right-10 w-96 h-96 bg-emerald-400 opacity-10 rounded-full blur-3xl"></div>
+  const filterButtons = [
+    { key: "all",       label: "All",       bg: "bg-violet-500 text-white", inactive: "bg-white text-violet-500 border border-violet-300 hover:bg-violet-50" },
+    { key: "active",    label: "Active",    bg: "bg-orange-400 text-white", inactive: "bg-white text-orange-400 border border-orange-300 hover:bg-orange-50" },
+    { key: "completed", label: "Completed", bg: "bg-emerald-500 text-white", inactive: "bg-white text-emerald-500 border border-emerald-300 hover:bg-emerald-50" },
+  ];
 
-      <div className="relative z-10 w-full max-w-lg bg-stone-800 border border-stone-700 rounded-2xl shadow-2xl p-8">
-        <div className="mb-6 text-center">
-          <h1 className="text-3xl font-bold text-white tracking-tight">📝 My Todo App</h1>
-          <p className="text-stone-400 text-sm mt-1">
-            {completedCount} of {todos.length} tasks completed
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-violet-100 via-pink-50 to-orange-100 flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-xl bg-white rounded-3xl shadow-2xl p-8 border border-violet-100">
+
+        {/* Header */}
+        <div className="mb-8 text-center">
+          <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-pink-500 mb-2">
+            My Tasks ✅
+          </h1>
+          <p className="text-lg text-gray-500 font-medium">
+            <span className="text-emerald-500 font-bold">{completedCount}</span>
+            <span> of </span>
+            <span className="text-violet-500 font-bold">{todos.length}</span>
+            <span> tasks completed</span>
           </p>
         </div>
 
-        {/* ✅ Show error banner if backend is down */}
-        {error && (
-          <div className="mb-4 px-4 py-3 bg-red-500/20 border border-red-500/50 rounded-xl text-red-400 text-sm text-center">
-            {error}
-          </div>
-        )}
-
+        {/* Form */}
         <TodoForm onAdd={handleAdd} />
 
-        <div className="flex gap-2 mb-5">
-          {["all", "active", "completed"].map((f) => (
+        {/* Filter Buttons */}
+        <div className="flex gap-3 mb-6">
+          {filterButtons.map(({ key, label, bg, inactive }) => (
             <button
-              key={f}
-              onClick={() => setFilter(f)}
-              className={`flex-1 py-2 rounded-lg text-sm font-medium capitalize transition ${
-                filter === f
-                  ? "bg-blue-500 text-white"
-                  : "bg-stone-700 text-stone-400 hover:bg-stone-600"
+              key={key}
+              onClick={() => setFilter(key)}
+              className={`flex-1 py-2.5 rounded-xl text-base font-semibold transition duration-200 ${
+                filter === key ? bg : inactive
               }`}
             >
-              {f}
+              {label}
             </button>
           ))}
         </div>
 
+        {/* List */}
         {loading ? (
-          <p className="text-center text-stone-400">Loading...</p>
+          <p className="text-center text-gray-400 text-lg py-10">Loading...</p>
         ) : (
-          <TodoList todos={filteredTodos} onDelete={handleDelete} onUpdate={handleUpdate} />
+          <TodoList
+            todos={filteredTodos}
+            onDelete={handleDelete}
+            onUpdate={handleUpdate}
+          />
         )}
       </div>
     </div>
