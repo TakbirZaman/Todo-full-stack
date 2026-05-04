@@ -13,27 +13,69 @@ const TodoForm = ({ onAdd }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-2 mb-6">
-      <div className="flex gap-3">
+    <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "32px" }}>
+      <div style={{ display: "flex", gap: "10px" }}>
         <input
           type="text"
           value={title}
           onChange={(e) => { setTitle(e.target.value); setError(""); }}
-          placeholder="What needs to be done? ✍️"
-          className="flex-1 px-5 py-4 rounded-2xl border-2 border-violet-200 
-                     text-gray-700 text-lg placeholder-gray-300
-                     focus:outline-none focus:border-violet-500 transition"
+          placeholder="What needs to be done?"
+          style={{
+            flex: 1,
+            background: "#16161a",
+            border: "1.5px solid rgba(255,255,255,0.07)",
+            borderRadius: "16px",
+            padding: "14px 20px",
+            fontFamily: "'DM Sans', sans-serif",
+            fontSize: "15px",
+            color: "#f0f0f0",
+            outline: "none",
+            transition: "border-color 0.2s, box-shadow 0.2s",
+          }}
+          onFocus={e => {
+            e.target.style.borderColor = "#c8f135";
+            e.target.style.boxShadow = "0 0 0 3px rgba(200,241,53,0.1)";
+          }}
+          onBlur={e => {
+            e.target.style.borderColor = "rgba(255,255,255,0.07)";
+            e.target.style.boxShadow = "none";
+          }}
         />
         <button
           type="submit"
-          className="px-6 py-4 bg-gradient-to-r from-violet-500 to-pink-500 
-                     hover:from-violet-600 hover:to-pink-600 text-white text-lg 
-                     font-bold rounded-2xl transition duration-200 shadow-md"
+          style={{
+            background: "#c8f135",
+            color: "#0d0d0f",
+            border: "none",
+            borderRadius: "16px",
+            padding: "14px 22px",
+            fontFamily: "'Syne', sans-serif",
+            fontSize: "15px",
+            fontWeight: 700,
+            cursor: "pointer",
+            display: "flex",
+            alignItems: "center",
+            gap: "6px",
+            transition: "transform 0.15s, box-shadow 0.15s",
+            whiteSpace: "nowrap",
+          }}
+          onMouseEnter={e => {
+            e.target.style.transform = "translateY(-1px)";
+            e.target.style.boxShadow = "0 6px 20px rgba(200,241,53,0.3)";
+          }}
+          onMouseLeave={e => {
+            e.target.style.transform = "translateY(0)";
+            e.target.style.boxShadow = "none";
+          }}
         >
           + Add
         </button>
       </div>
-      {error && <p className="text-red-400 text-base font-medium pl-2">{error}</p>}
+      {error && (
+        <p style={{ fontSize: "13px", color: "#ff5252", paddingLeft: "4px" }}>
+          {error}
+        </p>
+      )}
     </form>
   );
 };

@@ -1,17 +1,149 @@
-:root {
-  --accent: #4f46e5;
-  --accent-bg: #eef2ff;
-  --accent-border: #c7d2fe;
+/* ============================================================
+   DESIGN TOKENS
+   ============================================================ */
 
-  --text-h: #1f2937;
-  --border: #e5e7eb;
-  --social-bg: #f9fafb;
-  --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+:root {
+  /* Typography */
+  --sans:    system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono:    ui-monospace, Consolas, monospace;
+
+  /* Colors — Light */
+  --text:           #6b6375;
+  --text-h:         #08060d;
+  --bg:             #fff;
+  --border:         #e5e4e7;
+  --code-bg:        #f4f3ec;
+  --accent:         #7e7784;
+  --accent-bg:      rgba(170, 59, 255, 0.1);
+  --accent-border:  rgba(170, 59, 255, 0.5);
+  --social-bg:      rgba(84, 205, 230, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.1) 0 10px 15px -3px,
+    rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+
+  /* Base */
+  font:              18px/145% var(--sans);
+  letter-spacing:    0.18px;
+  color-scheme:      light dark;
+  color:             var(--text);
+  background:        var(--bg);
+  font-synthesis:    none;
+  text-rendering:    optimizeLegibility;
+  -webkit-font-smoothing:  antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Counter */
+@media (max-width: 1024px) {
+  :root { font-size: 16px; }
+}
+
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text:          #9ca3af;
+    --text-h:        #f3f4f6;
+    --bg:            #16171d;
+    --border:        #2e303a;
+    --code-bg:       #1f2028;
+    --accent:        #c084fc;
+    --accent-bg:     rgba(192, 132, 252, 0.15);
+    --accent-border: rgba(192, 132, 252, 0.5);
+    --social-bg:     rgba(47, 48, 58, 0.5);
+    --shadow:
+      rgba(0, 0, 0, 0.4) 0 10px 15px -3px,
+      rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+  }
+
+  #social .button-icon {
+    filter: invert(1) brightness(2);
+  }
+}
+
+
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+
+body {
+  margin: 0;
+}
+
+#root {
+  width: 1126px;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  border-inline: 1px solid var(--border);
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+
+/* ============================================================
+   TYPOGRAPHY
+   ============================================================ */
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 60px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+}
+
+@media (max-width: 1024px) {
+  h1 { font-size: 36px; margin: 20px 0; }
+}
+
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+}
+
+@media (max-width: 1024px) {
+  h2 { font-size: 20px; }
+}
+
+p {
+  margin: 0;
+}
+
+code,
 .counter {
-  font-size: 18px; /* bigger */
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--code-bg);
+}
+
+
+/* ============================================================
+   COUNTER
+   ============================================================ */
+
+.counter {
+  font-size: 18px;
   padding: 8px 14px;
   border-radius: 8px;
   color: var(--accent);
@@ -21,16 +153,14 @@
   margin-bottom: 28px;
 }
 
-.counter:hover {
-  border-color: var(--accent-border);
-}
+.counter:hover        { border-color: var(--accent-border); }
+.counter:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 
-.counter:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 3px;
-}
 
-/* Hero */
+/* ============================================================
+   HERO
+   ============================================================ */
+
 .hero {
   position: relative;
 }
@@ -57,19 +187,21 @@
   z-index: 1;
   top: 36px;
   height: 30px;
-  transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-    scale(1.5);
+  transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg) scale(1.5);
 }
 
 .hero .vite {
   z-index: 0;
   top: 110px;
   height: 28px;
-  transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-    scale(0.9);
+  transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg) scale(0.9);
 }
 
-/* Center */
+
+/* ============================================================
+   CENTER LAYOUT
+   ============================================================ */
+
 #center {
   display: flex;
   flex-direction: column;
@@ -80,29 +212,24 @@
 }
 
 @media (max-width: 1024px) {
-  #center {
-    padding: 36px 22px 26px;
-    gap: 20px;
-  }
+  #center { padding: 36px 22px 26px; gap: 20px; }
 }
 
-/* Next Steps */
+
+/* ============================================================
+   NEXT STEPS
+   ============================================================ */
+
 #next-steps {
   display: flex;
   border-top: 1px solid var(--border);
   text-align: left;
-  background: #ffffff;
+  background: var(--bg);
 }
 
 #next-steps > div {
   flex: 1;
   padding: 36px;
-}
-
-@media (max-width: 1024px) {
-  #next-steps > div {
-    padding: 24px 20px;
-  }
 }
 
 #next-steps .icon {
@@ -112,22 +239,15 @@
 }
 
 @media (max-width: 1024px) {
-  #next-steps {
-    flex-direction: column;
-    text-align: center;
-  }
+  #next-steps           { flex-direction: column; text-align: center; }
+  #next-steps > div     { padding: 24px 20px; }
 }
 
-/* Docs section */
-#docs {
-  border-right: 1px solid var(--border);
-}
+/* Docs column */
+#docs { border-right: 1px solid var(--border); }
 
 @media (max-width: 1024px) {
-  #docs {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+  #docs { border-right: none; border-bottom: 1px solid var(--border); }
 }
 
 /* Links */
@@ -139,13 +259,11 @@
   margin-top: 28px;
 }
 
-#next-steps ul .logo {
-  height: 20px;
-}
+#next-steps ul .logo   { height: 20px; }
 
 #next-steps ul a {
   color: var(--text-h);
-  font-size: 17px; /* bigger */
+  font-size: 17px;
   border-radius: 8px;
   background: var(--social-bg);
   display: flex;
@@ -158,44 +276,36 @@
 
 #next-steps ul a:hover {
   box-shadow: var(--shadow);
-  background: #f3f4f6;
+  background: var(--accent-bg);
 }
 
-#next-steps ul .button-icon {
-  height: 20px;
-  width: 20px;
-}
+#next-steps ul .button-icon { height: 20px; width: 20px; }
 
 @media (max-width: 1024px) {
-  #next-steps ul {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  #next-steps ul li {
-    flex: 1 1 calc(50% - 10px);
-  }
-
-  #next-steps ul a {
-    width: 100%;
-    justify-content: center;
-  }
+  #next-steps ul         { margin-top: 20px; flex-wrap: wrap; justify-content: center; }
+  #next-steps ul li      { flex: 1 1 calc(50% - 10px); }
+  #next-steps ul a       { width: 100%; justify-content: center; }
 }
 
-/* Spacer */
+
+/* ============================================================
+   SPACER
+   ============================================================ */
+
 #spacer {
   height: 90px;
   border-top: 1px solid var(--border);
 }
 
 @media (max-width: 1024px) {
-  #spacer {
-    height: 50px;
-  }
+  #spacer { height: 50px; }
 }
 
-/* Ticks */
+
+/* ============================================================
+   TICKS
+   ============================================================ */
+
 .ticks {
   position: relative;
   width: 100%;
@@ -209,12 +319,5 @@
   border: 5px solid transparent;
 }
 
-.ticks::before {
-  left: 0;
-  border-left-color: var(--border);
-}
-
-.ticks::after {
-  right: 0;
-  border-right-color: var(--border);
-}
+.ticks::before { left: 0;  border-left-color:  var(--border); }
+.ticks::after  { right: 0; border-right-color: var(--border); }
